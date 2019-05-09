@@ -1,0 +1,1 @@
+Windows Media Playerの機能を使用したCDから音楽ファイルを取り込むサンプルです。
