@@ -5,8 +5,8 @@ Public Class Form1
     'WMP関連インスタンス生成
     Private wmp As New WMPLib.WindowsMediaPlayer
     Private cdDrives As WMPLib.IWMPCdromCollection = wmp.cdromCollection
-    Private cdRom As WMPLib.IWMPCdrom = Nothing 'cdDrives.getByDriveSpecifier("D")
-    Private ripper As WMPLib.IWMPCdromRip = Nothing 'CDRom
+    Private cdRom As WMPLib.IWMPCdrom = Nothing
+    Private ripper As WMPLib.IWMPCdromRip = Nothing
 
     ''' <summary>
     ''' 初期化処理
@@ -35,7 +35,6 @@ Public Class Form1
             For i = 0 To ListBox1.Items.Count - 1
                 If ListBox1.GetSelected(i) Then
                     cdRom.Playlist.Item(i).setItemInfo("SelectedForRip", "True")
-                    Console.WriteLine(cdRom.Playlist.Item(i).name)
                 Else
                     cdRom.Playlist.Item(i).setItemInfo("SelectedForRip", "False")
                 End If
@@ -129,6 +128,7 @@ Public Class Form1
             Dim cdDriveName As String = ""
             Dim cdTitle As String
             Dim songTitle As String
+            Dim CdDrive As Boolean = False
             Dim K As Integer
 
             ListBox1.Items.Clear()
@@ -144,13 +144,14 @@ Public Class Form1
                 Select Case drive.DriveType
                     Case System.IO.DriveType.CDRom
                         cdDriveName = driveName
+                        CdDrive = True
                         '見つかったらループ終了
                         Exit For
                 End Select
             Next
 
             'ドライブが使用できるか
-            If drive.IsReady Then
+            If CdDrive AndAlso drive.IsReady Then
                 cdRom = cdDrives.getByDriveSpecifier(cdDriveName(0))
                 ripper = cdRom
                 cdTitle = cdRom.Playlist.name
